@@ -14,11 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return view('index');
+});
 
 Route::resource('/product', ProductController::class)->except(['product.edit', 'product.update']);
 
 // Only admin
 Route::group(['middleware' => ['role:admin']], function () {
-    Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');
-    Route::put('/product/{product}', [ProductController::class, 'update'])->name('product.update');
+    // Route::get('/product/{product}/edit', [ProductController::class, 'edit'])->name('product.edit');
+    // Route::put('/product/{product}', [ProductController::class, 'update'])->name('product.update');
 });
