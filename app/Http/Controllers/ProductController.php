@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductCreateRequest;
+use App\Jobs\ProductProcessJob;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 
 
 class ProductController extends Controller
@@ -26,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('project_create');
     }
 
     /**
@@ -38,8 +38,16 @@ class ProductController extends Controller
     public function store(ProductCreateRequest $request)
     {
         $product = Product::create($request->validate());
-        $message = '';
-        Notification::send($product, new InvoicePaid($message));
+        if (asset($product) && !empty($product)) {
+            $message = 'added a new product';
+            $send = config('products.email');
+            ProductProcessJob::dispatch($send, $product, $message);
+        }
+        $response = [
+            'data' => $product,
+            'message' => 'success'
+        ];
+        return response($response, 201)->back();
     }
 
     /**
@@ -50,7 +58,7 @@ class ProductController extends Controller
      */
     public function show(ProductCreateRequest $product)
     {
-        //
+        return view('project_detail', compact('product'));
     }
 
     /**
@@ -61,7 +69,7 @@ class ProductController extends Controller
      */
     public function edit(ProductCreateRequest $product)
     {
-        //
+        return view('project_edit', compact('product'));
     }
 
     /**
@@ -73,6 +81,12 @@ class ProductController extends Controller
      */
     public function update(ProductCreateRequest $request, Product $product)
     {
+        $product->update($request->validate());
+        $response = [
+            'data' => $product,
+            'message' => 'success'
+        ];
+        return response($response, 202)->back();
     }
 
     /**
@@ -83,6 +97,7 @@ class ProductController extends Controller
      */
     public function destroy(ProductCreateRequest $product)
     {
-        //
+        $product->delete();
+        return response(204)->back()->with('success', 'Product deleted');
     }
 }
