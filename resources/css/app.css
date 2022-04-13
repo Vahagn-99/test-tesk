@@ -1,0 +1,38 @@
+.logo {
+    background-color: #fff;
+    width: 40%;
+    height: auto;
+    border-radius: 0 0 40% 0;
+}
+
+.page_title {
+    width: 60%;
+    height: auto;
+    color: #fff;
+}
+
+.sidebar {
+    padding: 0px;
+}
+
+.product {
+    background-color: #374050;
+    color: #fff
+}
+
+.product form .add_prod {
+    width: 70%;
+}
+
+.product form label {
+    font-size: 11px;
+}
+
+.btn {
+    background-color: #0fc5ff;
+    color: #fff
+}
+
+.btn:hover {
+    color: #fff
+}
