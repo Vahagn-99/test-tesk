@@ -119,49 +119,8 @@
                         }
                         return list.toString().replaceAll(",", "<br>");
                     }
-                    // show Product method
-                    let showProduct = () => {
-                        $("#show_product").hide();
-                        $('.product_item').on('click', function() {
-                            let id = $(this).attr('value');
-                            console.log(id);
-                            queryAjax(`api/products/${id}`, "GET", (response) => {
-                                $('#articul_id').text(response.data.article);
-                                $('#name_id').text(response.data.name);
-                                $('#status_id').text(response.data.status);
-                                let data = objectParse(response.data.data);
-                                $('#data_id').html(data);
-                                $("#show_product").show();
-                                console.log(response);
-                            })
-                        })
-                        $("#close_show").on("click", function() {
-                            $("#show_product").hide();
-                        });
-                    }
-                    //get all products
-                    let elemtTr = '';
-                    let getProducts = () => {
-                        queryAjax("{{ route('products.index') }}", 'GET', (response) => {
-                            response.data.forEach(product => {
-                                elemtTr += `<tr class="product_item"`
-                                elemtTr += ` role = "button"`
-                                elemtTr += ` value = "${product.id}" >`
-                                elemtTr += ` <td>${product.article}</td>`
-                                elemtTr += ` <td>${product.name}</td>`
-                                elemtTr += ` <td>${product.status}</td>`
-                                elemtTr += ` <td class="h6">${objectParse(product.data)}</td>`
-                                elemtTr += ` </tr>`;
-                            })
-                            $('#get-Products').html(elemtTr)
-                            showProduct()
-                        })
 
-                    }
-                    getProducts();
-                    //add new product
-                    $('#add_product').on('submit', (e) => {
-                        e.preventDefault();
+                    function getNewRows() {
 
                         let keys = []; // keys for optional rows
                         let values = []; // values for optional rows
@@ -179,8 +138,86 @@
                                 result[keys[i]] = values[i];
                         }
 
+                        return result;
+                    }
+
+                    // show Product method
+                    let showProduct = () => {
+                        $("#show_product").hide();
+                        $('.product_item').on('click', function() {
+                            let id = $(this).attr('value');
+                            // $("#show_product").attr('value') = id;
+                            queryAjax(`api/products/${id}`, "GET", (response) => {
+                                $('#articul_id').text(response.data.article);
+                                $('#name_id').text(response.data.name);
+                                $('#status_id').text(response.data.status);
+                                let data = objectParse(response.data.data);
+                                $('#data_id').html(data);
+                                $("#show_product").show();
+                            })
+                        })
+                        $("#close_show").on("click", function() {
+                            $("#show_product").hide();
+                        });
+                    }
+                    //update porduct
+                    let updateProduct = () => {
+                        $("#update_product").hide();
+                        $('.product_item').on('click', function() {
+                            // let result = GetnewRows();
+                            queryData = {};
+                            queryData['articul_id'] = $('#articul_id').text();
+                            queryData['name_id'] = $('#name_id').text();
+                            queryData['status_id'] = $('#status_id').text();
+                            queryData['data_id'] = $('#data_id').html();
+                            console.log(queryData);
+                            queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
+                                _meyhod: "PUT"
+                                _token: "{{ csrf_token() }}",
+                                article: $("#update_article").val(),
+                                name: $("#update_name").val(),
+                                status: $("#update_status").val(),
+                                data: result,
+                            }, () => {
+                                $('#get-Products').html(elemtTr = '');
+                                console.log('reset');
+                            }, () => {
+                                getProducts();
+                            })
+                        })
+                        $("#close_update").on("click", function() {
+                            $("#update_product").hide();
+                        });
+                    }
+
+                    //get all products
+                    let elemtTr = '';
+                    let getProducts = () => {
+                        queryAjax("{{ route('products.index') }}", 'GET', (response) => {
+                            response.data.forEach(product => {
+                                elemtTr += `<tr class="product_item"`
+                                elemtTr += ` role = "button"`
+                                elemtTr += ` value = "${product.id}" >`
+                                elemtTr += ` <td>${product.article}</td>`
+                                elemtTr += ` <td>${product.name}</td>`
+                                elemtTr += ` <td>${product.status}</td>`
+                                elemtTr += ` <td class="h6">${objectParse(product.data)}</td>`
+                                elemtTr += ` </tr>`;
+                            })
+                            $('#get-Products').html(elemtTr)
+                            showProduct()
+                            updateProduct()
+                        })
+
+                    }
+                    getProducts();
+                    //add new product
+                    $('#add_product').on('submit', (e) => {
+                        e.preventDefault();
+                        let result = GetnewRows()
+
                         queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
-                            "_token": "{{ csrf_token() }}",
+                            _token: "{{ csrf_token() }}",
                             article: $("#article").val(),
                             name: $("#name").val(),
                             status: $("#status").val(),

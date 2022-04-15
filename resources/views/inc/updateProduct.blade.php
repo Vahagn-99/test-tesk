@@ -2,30 +2,30 @@
     @csrf
     <div class="prod">
         <div class="d-flex justify-content-between">
-            <h3>Добавить продукт</h3>
-            <a href="#" id="close"><i class="fas fa-times"></i></a>
+            <h3>Изменить продукт</h3>
+            <a href="#" id="close_update"><i class="fas fa-times"></i></a>
         </div>
         <div class="form-group">
             <label for="articul" id="">Артикул</label>
-            <input type="text" class="form-control" id="article" name="articul">
+            <input type="text" class="form-control" id="update_article" name="articul">
         </div>
         <div class="form-group">
             <label for="name">Название</label>
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="update_name" name="name">
         </div>
         <div class="form-group">
             <label for="status">Статус</label>
-            <select class="form-control" id="status" name="status">
+            <select class="form-control" id="update_status" name="status">
                 <option value="1">Доступен</option>
                 <option value="0">Не доступен</option>
             </select>
         </div>
         <h5>Атрибуты </h5>
         <div class="">
-            <div id="newRow"></div>
+            <div id="update_newRow"></div>
         </div>
         <div>
-            <a id="addRow" class="text-primery fs-1" style="border-bottom:1px dotted blue">+Добавить атрибут</a>
+            <a id="update_addRow" class="text-primery fs-1" style="border-bottom:1px dotted blue">+Добавить атрибут</a>
         </div>
         <button type="submit" class="btn btn-md px-5 my-4">Добавить</button>
     </div>

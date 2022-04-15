@@ -1,4 +1,4 @@
-<div id="show_product" class="show_product product">
+<div id="show_product" class="show_product product" value="">
     <div class="button-group">
         <button type="button" class="btn btn-primary">Edit</button>
         <button type="button" class="btn btn-danger">Delete</button>
