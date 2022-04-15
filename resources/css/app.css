@@ -20,7 +20,7 @@
     color: #fff
 }
 
-.product form .add_prod {
+.product form .prod {
     width: 70%;
 }
 
@@ -35,4 +35,17 @@
 
 .btn:hover {
     color: #fff
+}
+
+#addRow {
+    cursor: pointer;
+}
+
+.trash,
+#close {
+    color: darkgray
+}
+
+.add_prod {
+    display: none;
 }

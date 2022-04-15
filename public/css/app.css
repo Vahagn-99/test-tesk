@@ -53033,7 +53033,7 @@ a.text-muted:hover {
     color: #fff
 }
 
-.product form .add_prod {
+.product form .prod {
     width: 70%;
 }
 
@@ -53048,5 +53048,18 @@ a.text-muted:hover {
 
 .btn:hover {
     color: #fff
+}
+
+#addRow {
+    cursor: pointer;
+}
+
+.trash,
+#close {
+    color: darkgray
+}
+
+.add_prod {
+    display: none;
 }
 

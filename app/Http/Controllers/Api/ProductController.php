@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = ProductResource::collection(Product::get());
+        $products = ProductResource::collection(Product::orderBy('id', 'desc')->paginate(10));
         $response = [
             'data' => $products,
             'message' => 'success 1',
@@ -36,11 +36,17 @@ class ProductController extends Controller
     public function store(ProductCreateRequest $request)
     {
         if ($request->ajax()) {
-            $product = Product::create($request->validate());
+
+            $product = Product::create([
+                'article' => $request->article,
+                'name' => $request->name,
+                'status' => $request->status,
+                'data' =>  json_encode($request->data),
+            ]);
             if (asset($product) && !empty($product)) {
                 $send = config('products.email');
                 $message = 'added a new product';
-                ProductProcessJob::dispatch($send, $product, $message);
+                ProductProcessJob::dispatch($send, $product, $message)->onQueue('product');
                 $response = [
                     'data' => new ProductResource($product),
                     'message' => 'success 1'
@@ -75,7 +81,11 @@ class ProductController extends Controller
      */
     public function update(ProductCreateRequest $request, Product $product)
     {
-        $product->update($request->validate());
+        $product->update([
+            'name' => $request->name,
+            'status' => $request->status,
+            'data' =>  json_encode($request->data),
+        ]);
         if (Auth::user()->hasRole('admin')) {
             $product->article = $request->article;
         }

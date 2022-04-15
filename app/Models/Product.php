@@ -11,7 +11,9 @@ use App\Notifications\ProductAdd;
 class Product extends Model
 {
     use HasFactory, Notifiable, SoftDeletes;
-
+    protected $fillable = [
+        'article', 'name', 'status', 'data'
+    ];
     public function scopeAvailable()
     {
         return $this->where('status', 1)->get();

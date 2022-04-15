@@ -25,7 +25,7 @@ class ProductCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|min:10',
-            'article' => 'required|regex:/^[a-zA-Z]|string|integer|unique:products,article',
+            'article' => 'required|regex:/^[a-zA-Z0-9_.-]*$/|unique:products',
         ];
     }
 }

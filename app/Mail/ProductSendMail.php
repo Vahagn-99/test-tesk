@@ -31,6 +31,6 @@ class ProductSendMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.ProductSendEmail');
+        return $this->markdown('emails.ProductSendEmail');
     }
 }

@@ -47,7 +47,7 @@
         <div class=" content-wrapper">
             <section class="content container-fluid">
                 <div class="row">
-                    <div class="col-md-6 mt-2">
+                    <div class="col-md-7 mt-2">
                         <div class="card  p-0">
                             <table class="table">
                                 <thead>
@@ -59,127 +59,143 @@
                                     </tr>
                                 </thead>
                                 <tbody id="get-Products">
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <button class="btn  btn-md float-right m-2">добавить</button>
+                    <div class="col-md-5">
+                        <button class="btn btn-md float-right m-2 px-5" id="add_btn">Добавить</button>
 
-                        <div class="product m-2 mt-5 p-3">
-                            <form>
-                                <div class="add_prod">
-                                    <h3>Добавить продукт</h3>
-                                    <div class="form-group">
-                                        <label for="articul">Артикул</label>
-                                        <input type="password" class="form-control" id="articul" name="articul"
-                                            placeholder="Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="name">Название</label>
-                                        <input type="password" class="form-control" id="name" name="name"
-                                            placeholder="Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status">Статус</label>
-                                        <select class="form-control" id="status" name="status">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                        </select>
-                                    </div>
-                                    <h5>Атрибуты </h5>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="form-group pr-3">
-                                            <label for="exampleInputPassword1">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                                placeholder="Password">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword1">Password</label>
-                                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                                placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div id="inputFormRow">
-                                            <div class="input-group mb-3">
-                                                <input type="text" name="title[]" class="form-control m-input"
-                                                    placeholder="Enter title" autocomplete="off">
-                                                <input type="text" name="title[]" class="form-control m-input"
-                                                    placeholder="Enter title" autocomplete="off">
-                                                <div class="input-group-append">
-                                                    <a id="removeRow">Delete</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="newRow"></div>
-                                        <a id="addRow" class="text-primery">+Add Row</a>
-                                    </div>
-                            </form>
+                        <div class="product m-2 mt-5 p-3 add_prod">
+                            @include('inc.addProduct')
                         </div>
+                        @include('inc.showProduct')
                     </div>
                 </div>
+            </section>
         </div>
-        </section>
-    </div>
-    @push('custom-js')
-        <script>
-            $(document).ready(function() {
-                function queryAjax(url, method, resolve, data = null, before = null, after = null) {
-                    // e.preventDefault();
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        url: url,
-                        method: method,
-                        data: data,
-                        beforeSend: () => {
-                            if (before)
-                                before();
-                        },
-                        complete: () => {
-                            if (after)
-                                after();
-                        },
-                        success: function(result) {
-                            resolve(result);
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }()
-                    });
-                }
-                const getProducts = queryAjax("{{ route('products.index') }}", 'GET', (response) => {
-                    function objectParse(object, list = []) {
+        @push('custom-js')
+            <script>
+                $(document).ready(function() {
+                    function queryAjax(
+                        url,
+                        method,
+                        resolve,
+                        data = null,
+                        before = null,
+                        after = null
+                    ) {
+                        // e.preventDefault();
+                        $.ajaxSetup({
+                            headers: {
+                                "X-CSRF-TOKEN": $('meta[name="_token"]').attr("content"),
+                            },
+                        });
+                        $.ajax({
+                            url: url,
+                            method: method,
+                            data: data,
+                            beforeSend: () => {
+                                if (before) before();
+                            },
+                            complete: () => {
+                                if (after) after();
+                            },
+                            success: function(result) {
+                                resolve(result);
+                            },
+                            error: (function(error) {
+                                console.log(error);
+                            })(),
+                        });
+                    }
 
+                    function objectParse(object, list = []) {
+                        if (!object) {
+                            return "no property";
+                        }
                         for (const [key, value] of Object.entries(object)) {
                             list.push(`${key}:${value}`);
                         }
-                        console.log(list.toString().replace(',', '\n'));
-                        return list.toString().replaceAll(',', "<br>");
-                    };
-                    console.log(response.data);
-                    response.data.forEach(product => {
+                        return list.toString().replaceAll(",", "<br>");
+                    }
+                    // show Product method
+                    let showProduct = () => {
+                        $("#show_product").hide();
+                        $('.product_item').on('click', function() {
+                            let id = $(this).attr('value');
+                            console.log(id);
+                            queryAjax(`api/products/${id}`, "GET", (response) => {
+                                $('#articul_id').text(response.data.article);
+                                $('#name_id').text(response.data.name);
+                                $('#status_id').text(response.data.status);
+                                let data = objectParse(response.data.data);
+                                $('#data_id').html(data);
+                                $("#show_product").show();
+                                console.log(response);
+                            })
+                        })
+                        $("#close_show").on("click", function() {
+                            $("#show_product").hide();
+                        });
+                    }
+                    //get all products
+                    let elemtTr = '';
+                    let getProducts = () => {
+                        queryAjax("{{ route('products.index') }}", 'GET', (response) => {
+                            response.data.forEach(product => {
+                                elemtTr += `<tr class="product_item"`
+                                elemtTr += ` role = "button"`
+                                elemtTr += ` value = "${product.id}" >`
+                                elemtTr += ` <td>${product.article}</td>`
+                                elemtTr += ` <td>${product.name}</td>`
+                                elemtTr += ` <td>${product.status}</td>`
+                                elemtTr += ` <td class="h6">${objectParse(product.data)}</td>`
+                                elemtTr += ` </tr>`;
+                            })
+                            $('#get-Products').html(elemtTr)
+                            showProduct()
+                        })
 
-                        $('#get-Products').append(
-                            `<tr >
-                                        <td>${product.article}</td>
-                                        <td>${product.name}</td>
-                                        <td>${product.status}</td>
-                                        <td class="h6">${objectParse(product.data)}</td>
-                                        </tr>`
+                    }
+                    getProducts();
+                    //add new product
+                    $('#add_product').on('submit', (e) => {
+                        e.preventDefault();
 
-                        )
+                        let keys = []; // keys for optional rows
+                        let values = []; // values for optional rows
+                        let result = {};
+
+                        $("input[name='key[]']").each(function() {
+                            return keys.push(this.value);
+                        });
+                        $("input[name='value[]']").each(function() {
+                            return values.push(this.value);
+                        });
+                        // add optional rows to object
+                        for (i = 0; i < keys.length; i++) {
+                            if (keys[i] !== "" && values[i] !== "")
+                                result[keys[i]] = values[i];
+                        }
+
+                        queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
+                            "_token": "{{ csrf_token() }}",
+                            article: $("#article").val(),
+                            name: $("#name").val(),
+                            status: $("#status").val(),
+                            data: result,
+                        }, () => {
+                            $('#get-Products').html(elemtTr = '');
+                            console.log('reset');
+                        }, () => {
+                            getProducts();
+                        })
                     })
 
+
+
                 })
-            })
-        </script>
-    @endpush
-@endsection
+            </script>
+        @endpush
+    @endsection

@@ -15,9 +15,10 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'article' => $this->article,
             'name' => $this->name,
-            'status' => $this->status,
+            'status' => $this->status == 1 ? 'avalible' : 'unavailable',
             'data' => json_decode($this->data, true),
         ];
     }

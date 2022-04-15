@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class ProductProcessJob implements ShouldQueue
+class ProductProcessJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,8 +26,8 @@ class ProductProcessJob implements ShouldQueue
     public function __construct($send, $product, $message)
     {
         $this->product = $product;
-        $this->message = $message;
         $this->send = $send;
+        $this->message = $message;
     }
 
     /**
