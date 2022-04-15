@@ -4,8 +4,8 @@
 
         <nav class="d-flex justify-content-between main-header align-items-center navbar-white navbar-light">
 
-            <div class="px-5 py-3">
-                <span>Продукты </span>
+            <div class="px-5 py-3 sel">
+                <span >Продукты </span>
             </div>
             <div class="px-5 py-3">
                 <a href="#" class="d-block">{{ Auth::user()->name ?? ' name for user' }}</a>
@@ -69,7 +69,10 @@
                         <div class="product m-2 mt-5 p-3 add_prod">
                             @include('inc.addProduct')
                         </div>
-                        @include('inc.showProduct')
+                        <div id="show_product" class="product m-2 mt-5 p-3 show_product">
+                            @include('inc.showProduct')
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -128,15 +131,20 @@
                             queryAjax(`api/products/${id}`, "GET", (response) => {
                                 $('#articul_id').text(response.data.article);
                                 $('#name_id').text(response.data.name);
+                                $('#name_title').text(response.data.name);
                                 $('#status_id').text(response.data.status);
                                 let data = objectParse(response.data.data);
                                 $('#data_id').html(data);
                                 $("#show_product").show();
+                                $('#add_btn').hide();
+                                $(".add_prod").removeClass("show");
+
                                 console.log(response);
                             })
                         })
                         $("#close_show").on("click", function() {
                             $("#show_product").hide();
+                            $('#add_btn').show();
                         });
                     }
                     //get all products

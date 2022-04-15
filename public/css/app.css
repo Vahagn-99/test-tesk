@@ -53054,12 +53054,35 @@ a.text-muted:hover {
     cursor: pointer;
 }
 
-.trash,
-#close {
+.trash, #close, #close_show, .edit {
     color: darkgray
 }
 
-.add_prod {
+.add_prod,#show_product {
     display: none;
+}
+
+.edit-trash a{
+    font-size: 14px;
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 0.589);
+}
+
+#close, #close_show{
+    font-size: 18px;
+}
+
+.prod_view{
+    font-size:14px;
+    color: darkgray;
+    padding-bottom:100px;
+}
+
+.show{
+    display:block;
+}
+
+.sel{
+    border-bottom: 5px solid red;
 }
 
