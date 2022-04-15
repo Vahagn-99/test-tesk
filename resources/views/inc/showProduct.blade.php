@@ -1,28 +1,33 @@
-<div id="show_product" class="show_product product" value="">
-    <div class="button-group">
-        <button type="button" class="btn btn-primary">Edit</button>
-        <button type="button" class="btn btn-danger">Delete</button>
-    </div>
-    <div class="prod">
-        <div class="d-flex justify-content-between">
-            <h3>Card Product</h3>
-            <a href="#" id="close_show"><i class="fas fa-times"></i></a>
+<div>
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3 id="name_title"></h3>
+
+        <div class="row">
+            <div class="edit-trash">
+                <a href="#"><i class="edit far fa-edit"></i></a>
+                <a href="#"><i class="trash far fa-trash-alt"></i></a>
+            </div>
+            <a href="#" id="close_show"><i class="fas fa-times px-2"></i></a>
         </div>
-        <div class="form-group">
-            <label for="articul" id="">Артикул</label>
+    </div>
+
+    <div class="prod prod_view">
+        <div class="py-1">
+            <label id="">Артикул:</label>
             <span id="articul_id"></span>
         </div>
-        <div class="form-group">
-            <label for="name">Название</label>
+        <div class="py-1">
+            <label>Название:</label>
             <span id="name_id"></span>
         </div>
-        <div class="form-group">
-            <label for="status">Статус</label>
+        <div class="py-1">
+            <label>Статус:</label>
             <span id="status_id"></span>
         </div>
-        <div class="form-group">
-            <label for="data">Свойства</label>
-            <span id="data_id"></span>
+        <div class="py-1 px-2 row">
+            <label>Свойства:</label>
+            <div id="data_id" class="px-1"></div>
         </div>
     </div>
 </div>
