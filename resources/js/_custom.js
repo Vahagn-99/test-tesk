@@ -29,10 +29,18 @@ $(document).on("click", ".removeRow", function () {
 
 $(document).ready(function () {
     $("#add_btn").on("click", function () {
-        $(".add_prod").css("display", "block");
+        $(".add_prod").addClass("show");
+        $('#add_btn').hide();
+        $(".add_prod input").val("");
+        $(".removeRow").trigger("click");
     });
     $("#close").on("click", function () {
-        $(".add_prod").css("display", "none");
+        $(".add_prod").removeClass("show");
+        $('#add_btn').show();
+        $(".add_prod input").val("");
+        $(".removeRow").trigger("click");
+    });
+    $("#add").on("click", function () {
         $(".add_prod input").val("");
         $(".removeRow").trigger("click");
     });
