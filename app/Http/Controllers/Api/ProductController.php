@@ -102,9 +102,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProductCreateRequest $product)
+    public function destroy(Product $product)
     {
         $product->delete();
-        return response(MYSQLI_NO_DATA, 204);
+        return response('deleted', 204);
     }
 }

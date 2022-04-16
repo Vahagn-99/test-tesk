@@ -8,11 +8,11 @@
 
         <div class="form-group">
             <label for="articul" id="">Артикул</label>
-            <input type="text" class="form-control" id="article" name="articul">
+            <input type="text" class="form-control" id="article" name="articul" required>
         </div>
         <div class="form-group">
             <label for="name">Название</label>
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="form-group">
             <label for="status">Статус</label>
@@ -27,6 +27,7 @@
         </div>
         <div>
             <a id="addRow" class="text-primery fs-1" style="border-bottom:1px dotted blue">+Добавить атрибут</a>
+
         </div>
         <button type="submit" class="btn btn-md px-5 my-4" id="add">Добавить</button>
     </div>

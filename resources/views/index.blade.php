@@ -72,7 +72,9 @@
                         <div id="show_product" class="product m-2 mt-5 p-3 show_product">
                             @include('inc.showProduct')
                         </div>
-
+                        {{-- <div id="update_product" class="product m-2 mt-5 p-3 update_product">
+                            @include('inc.updateProduct')
+                        </div> --}}
                     </div>
                 </div>
             </section>
@@ -80,6 +82,8 @@
         @push('custom-js')
             <script>
                 $(document).ready(function() {
+                    let elemtTr = '';
+
                     function queryAjax(
                         url,
                         method,
@@ -108,6 +112,7 @@
                                 resolve(result);
                             },
                             error: (function(error) {
+
                                 console.log(error);
                             })(),
                         });
@@ -123,18 +128,21 @@
                         return list.toString().replaceAll(",", "<br>");
                     }
 
-                    function getNewRows() {
+                    function getNewRows(setKeys, setValuse) {
 
+                        if (!(setValuse) || !(setKeys))
+                            return '';
                         let keys = []; // keys for optional rows
                         let values = []; // values for optional rows
                         let result = {};
 
-                        $("input[name='key[]']").each(function() {
+                        $(setKeys).each(function() {
                             return keys.push(this.value);
                         });
-                        $("input[name='value[]']").each(function() {
+                        $(setValuse).each(function() {
                             return values.push(this.value);
                         });
+
                         // add optional rows to object
                         for (i = 0; i < keys.length; i++) {
                             if (keys[i] !== "" && values[i] !== "")
@@ -144,12 +152,32 @@
                         return result;
                     }
 
+                    //add new product
+                    $('#add_product').on('submit', (e) => {
+                        e.preventDefault();
+                        let result = getNewRows("input[name='key[]']", "input[name='value[]']");
+
+                        queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
+                            "_token": "{{ csrf_token() }}",
+                            article: $("#article").val(),
+                            name: $("#name").val(),
+                            status: $("#status").val(),
+                            data: result,
+                        }, () => {
+                            $('#get-Products').html(elemtTr = '');
+                            console.log('reset');
+                        }, () => {
+                            getProducts();
+                        })
+                    })
                     // show Product method
                     let showProduct = () => {
                         $("#show_product").hide();
                         $('.product_item').on('click', function() {
                             let id = $(this).attr('value');
-                            // $("#show_product").attr('value') = id;
+                            $("#update_product_item").attr('data-id', id);
+                            $("#delete_product_item").attr('data-id', id);
+
                             queryAjax(`api/products/${id}`, "GET", (response) => {
                                 $('#articul_id').text(response.data.article);
                                 $('#name_id').text(response.data.name);
@@ -160,7 +188,6 @@
                                 $("#show_product").show();
                                 $('#add_btn').hide();
                                 $(".add_prod").removeClass("show");
-                                console.log(response);
                             })
                         })
                         $("#close_show").on("click", function() {
@@ -168,38 +195,61 @@
                             $('#add_btn').show();
                         });
                     }
-                    //update porduct
-                    let updateProduct = () => {
-                        $("#update_product").hide();
-                        $('.product_item').on('click', function() {
-                            // let result = GetnewRows();
-                            queryData = {};
-                            queryData['articul_id'] = $('#articul_id').text();
-                            queryData['name_id'] = $('#name_id').text();
-                            queryData['status_id'] = $('#status_id').text();
-                            queryData['data_id'] = $('#data_id').html();
-                            console.log(queryData);
-                            queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
-                                _meyhod: "PUT"
-                                _token: "{{ csrf_token() }}",
-                                article: $("#update_article").val(),
-                                name: $("#update_name").val(),
-                                status: $("#update_status").val(),
-                                data: result,
-                            }, () => {
-                                $('#get-Products').html(elemtTr = '');
-                                console.log('reset');
-                            }, () => {
-                                getProducts();
-                            })
+                    //delete Product method
+                    let deleteProduct = function() {
+                        $('#delete_product_item').on('click', function() {
+                            let id = $('#delete_product_item').attr('data-id');
+                            let userAnswer = confirm('do you really want to delete this product ?')
+                            if (userAnswer) {
+                                queryAjax(`api/products/${id}`, "POST", (response) => {
+                                        console.log('deleted');
+                                    }, {
+                                        _method: "DELETE",
+                                        "_token": "{{ csrf_token() }}",
+                                    },
+                                    () => {
+                                        $('#get-Products').html(elemtTr = '');
+                                        console.log('reset');
+                                    },
+                                    () => {
+                                        getProducts();
+                                    })
+                            }
                         })
-                        $("#close_update").on("click", function() {
-                            $("#update_product").hide();
-                        });
                     }
+                    deleteProduct()
 
-                    //get all products
-                    let elemtTr = '';
+
+                    // //update porduct method
+                    // let updateProduct = () => {
+                    //     $("#update_product").hide();
+                    //     $('.update_product_item').each(function() {
+                    //         $(this).on("click", function(params) {
+                    //             let id = $(this).attr('data-id');
+                    //             let result = getNewRows("input[name='key[]']", "input[name='value[]']");
+
+                    //             $('#save_product').on('click', function(params) {
+                    //                 queryAjax(`api/products/${id}`, "POST", (
+                    //                     response) => {}, {
+                    //                     _method: "PUT",
+                    //                     "_token": "{{ csrf_token() }}",
+                    //                     article: $("#update_article").val(),
+                    //                     name: $("#update_name").val(),
+                    //                     status: $("#update_status").val(),
+                    //                     data: result,
+                    //                 }, () => {
+                    //                     $('#get-Products').html(elemtTr = '');
+                    //                     console.log('reset');
+                    //                 }, () => {
+                    //                     getProducts();
+                    //                 })
+                    //             })
+                    //         })
+
+                    //     })
+                    // }
+
+                    //get all products method
                     let getProducts = () => {
                         queryAjax("{{ route('products.index') }}", 'GET', (response) => {
                             response.data.forEach(product => {
@@ -214,32 +264,12 @@
                             })
                             $('#get-Products').html(elemtTr)
                             showProduct()
-                            updateProduct()
+                            // updateProduct()
+                            // deleteProduct()
                         })
 
                     }
                     getProducts();
-                    //add new product
-                    $('#add_product').on('submit', (e) => {
-                        e.preventDefault();
-                        let result = GetnewRows()
-
-                        queryAjax("{{ route('products.store') }}", "POST", (response) => {}, {
-                            _token: "{{ csrf_token() }}",
-                            article: $("#article").val(),
-                            name: $("#name").val(),
-                            status: $("#status").val(),
-                            data: result,
-                        }, () => {
-                            $('#get-Products').html(elemtTr = '');
-                            console.log('reset');
-                        }, () => {
-                            getProducts();
-                        })
-                    })
-
-
-
                 })
             </script>
         @endpush
