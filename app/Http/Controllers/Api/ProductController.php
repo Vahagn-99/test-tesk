@@ -7,6 +7,7 @@ use App\Jobs\ProductProcessJob;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,13 +82,20 @@ class ProductController extends Controller
      */
     public function update(ProductCreateRequest $request, Product $product)
     {
+        $response = array();
         $product->update([
             'name' => $request->name,
             'status' => $request->status,
             'data' =>  json_encode($request->data),
         ]);
-        if (Auth::user()->hasRole('admin')) {
+        $admin = User::admin()->get();
+        if ($admin) {
             $product->article = $request->article;
+        } else {
+            $response = [
+                'data' => null,
+                'message' => 'no permision'
+            ];
         }
         $response = [
             'data' => new ProductResource($product),

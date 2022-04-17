@@ -22,5 +22,13 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('vahagn')
             ]);
         }
+
+        $admin = User::create([
+            'name' => 'admin',
+            'email' => 'admin_admin@gmail.com',
+            'password' => 'adminadmin'
+        ]);
+        $admin->assignRole('writer');
+        $admin->givePermissionTo('edit articles');
     }
 }
